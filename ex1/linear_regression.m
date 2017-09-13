@@ -1,4 +1,4 @@
-function [f,g] = linear_regression(theta, X,y)
+function [f,g] = linear_regression(theta, X, y)
   %
   % Arguments:
   %   theta - A vector containing the parameter values to optimize.
@@ -22,3 +22,10 @@ function [f,g] = linear_regression(theta, X,y)
   %        computed gradient in 'g'.
   
 %%% YOUR CODE HERE %%%
+  for k=1:m
+    h = theta' * X(:,k) - y(k);
+    f = f + 0.5*(h)^2;   
+    g = g + X(:,k)*h;
+  end
+end
+

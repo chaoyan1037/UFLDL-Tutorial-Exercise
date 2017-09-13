@@ -1,4 +1,4 @@
-function [f,g] = logistic_regression(theta, X,y)
+function [f,g] = logistic_regression(theta, X, y)
   %
   % Arguments:
   %   theta - A column vector containing the parameter values to optimize.
@@ -7,7 +7,7 @@ function [f,g] = logistic_regression(theta, X,y)
   %   y - The label for each example.  y(j) is the j'th example's label.
   %
 
-  m=size(X,2);
+  m = size(X,2);
   
   % initialize objective value and gradient.
   f = 0;
@@ -22,3 +22,9 @@ function [f,g] = logistic_regression(theta, X,y)
   %        up the gradients (df/dtheta) for each example. Store the result in 'g'.
   %
 %%% YOUR CODE HERE %%%
+  for k = 1:m
+    h = sigmoid(theta'*X(:,k));
+    f = f - (y(k)*log2(h) + (1-y(k))*log2(1-h));
+    g = g + X(:,k) * (h - y(k));
+  end
+end

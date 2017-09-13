@@ -16,6 +16,7 @@ display_network(x(:,randsel));
 %  You can make use of the mean and repmat/bsxfun functions.
 
 %%% YOUR CODE HERE %%%
+x_zeromean = bsxfun(@minus, x, mean(x, 2));
 
 %%================================================================
 %% Step 1a: Implement PCA to obtain xRot
@@ -23,6 +24,9 @@ display_network(x(:,randsel));
 %  with respect to the eigenbasis of sigma, which is the matrix U.
 
 %%% YOUR CODE HERE %%%
+sigma = x * x' / size(x, 2);
+[U, S, V] = svd(sigma);
+xRot = U' * x;
 
 %%================================================================
 %% Step 1b: Check your implementation of PCA
@@ -34,6 +38,7 @@ display_network(x(:,randsel));
 %  diagonal (non-zero entries) against a blue background (zero entries).
 
 %%% YOUR CODE HERE %%%
+covar = xRot * xRot'/size(xRot, 2);
 
 % Visualise the covariance matrix. You should see a line across the
 % diagonal against a blue background.
@@ -46,6 +51,15 @@ imagesc(covar);
 %  to retain at least 99% of the variance.
 
 %%% YOUR CODE HERE %%%
+lamda = diag(covar);
+lamda_sum = 0.99 * sum(lamda);
+cur_sum = 0;
+for k = 1:size(lamda)
+    cur_sum = cur_sum + lamda(k);
+    if (cur_sum > lamda_sum ) 
+        break;
+    end
+end
 
 %%================================================================
 %% Step 3: Implement PCA with dimension reduction
@@ -62,6 +76,7 @@ imagesc(covar);
 %  correspond to dimensions with low variation.
 
 %%% YOUR CODE HERE %%%
+xHat = U(:, 1:k) * xRot(1:k, :);
 
 % Visualise the data, and compare it to the raw data
 % You should observe that the raw and processed data are of comparable quality.
@@ -78,8 +93,10 @@ display_network(x(:,randsel));
 %  Implement PCA with whitening and regularisation to produce the matrix
 %  xPCAWhite. 
 
-epsilon = 1e-1; 
+epsilon = 1e-4; 
 %%% YOUR CODE HERE %%%
+xPCAWhite = bsxfun(@rdivide, xRot, sqrt(lamda+epsilon));
+
 
 %% Step 4b: Check your implementation of PCA whitening 
 %  Check your implementation of PCA whitening with and without regularisation. 
@@ -97,7 +114,7 @@ epsilon = 1e-1;
 %  becoming smaller.
 
 %%% YOUR CODE HERE %%%
-
+covar = xPCAWhite * xPCAWhite' / size(xPCAWhite, 2);
 % Visualise the covariance matrix. You should see a red line across the
 % diagonal against a blue background.
 figure('name','Visualisation of covariance matrix');
@@ -110,6 +127,7 @@ imagesc(covar);
 %  that whitening results in, among other things, enhanced edges.
 
 %%% YOUR CODE HERE %%%
+xZCAWhite = U * xPCAWhite;
 
 % Visualise the data, and compare it to the raw data.
 % You should observe that the whitened images have enhanced edges.

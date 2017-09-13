@@ -23,7 +23,7 @@ m=size(train.X,2);
 n=size(train.X,1);
 
 % Train softmax classifier using minFunc
-options = struct('MaxIter', 200);
+options = struct('MaxIter', 400);
 
 % Initialize theta.  We use a matrix where each column corresponds to a class,
 % and each row is a classifier coefficient for that class.
@@ -49,7 +49,6 @@ fprintf('Training accuracy: %2.1f%%\n', 100*accuracy);
 % Print out test accuracy.
 accuracy = multi_classifier_accuracy(theta,test.X,test.y);
 fprintf('Test accuracy: %2.1f%%\n', 100*accuracy);
-
 
 % % for learning curves
 % global test
